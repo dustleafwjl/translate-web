@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {                 /* Enable incremental compilation */
+      "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
+      "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+      "lib": ["es2016", "dom"],                        /* Specify library files to be included in the compilation. */
+      "noImplicitUseStrict": true,
+      "outDir": "./dist",                        /* Redirect output structure to the directory. */
+      "removeComments": true,                /* Do not emit comments to output. */
+      "noEmitOnError": true,
+      "strictNullChecks": true,              /* Enable strict null checks. */
+      "strictPropertyInitialization": true,  /* Enable strict checking of property initialization in classes. */
+      "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+      "esModuleInterop": true,  
+    },
+    "include": ["./src"]
+  }
+  
