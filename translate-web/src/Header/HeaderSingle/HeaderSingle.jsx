@@ -57,10 +57,10 @@ class HeaderSingle extends Component {
         this.setState({
             translateLoading: true
         })
-        const result = await translateByAllWays(value, targetSelect)
-        const formatDataArr = result.map(ele => formatTranslateData(ele.data))
-        console.log('inputdata', formatDataArr)
-        this.props.setSingleDataToStore(formatDataArr)
+        const result = await translateByAllWays({ text: value, to: targetSelect})
+        // const formatDataArr = result.data.map(ele => formatTranslateData(ele.data))
+        console.log('inputdata', result.data)
+        this.props.setSingleDataToStore(result.data)
         this.setState({
             translateLoading: false
         })
