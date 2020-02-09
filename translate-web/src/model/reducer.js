@@ -1,5 +1,5 @@
 import { combineReducers }  from 'redux'
-import { TOTYPEFILE, TOTYPESINGLE, SETSINGLEDATA } from './action'
+import { TOTYPEFILE, TOTYPESINGLE, SETSINGLEDATA, SETTRANSLATEHISTORY } from './action'
 
 function PageTypeState(state = {}, action) {
     switch (action.type) {
@@ -27,7 +27,19 @@ function translateData(state = {}, action) {
     }
 }
 
+function translateHistory(state = {}, action) {
+    switch (action.type) {
+        case SETTRANSLATEHISTORY : 
+            return Object.assign({}, state, {
+                translateHistoryArr: action.value
+            })
+        default: 
+        return state
+    }
+}
+
 export default combineReducers({
     PageTypeState,
-    translateData
+    translateData,
+    translateHistory
 })

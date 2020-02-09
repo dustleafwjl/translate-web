@@ -37,16 +37,17 @@ export default class TranslateDao {
         const result = await TranslateIndex.findOne({text})
         return result?._id
     }
-    static async getTranslateById(id: string) {
-        
+    static async getGoogleBytId(id: string): Promise<ITranslateGoogle | null> {
+        return await TranslateGoogle.findOne({"tId": id})
     }
-    static async getGoogleById(id: string): Promise<ITranslateGoogle | null> {
-        return await TranslateGoogle.findById(id)
+    static async getYoudaoBytId(id: string): Promise<ITranslateYoudao | null> {
+        return await TranslateYoudao.findOne({"tId": id})
     }
-    static async getYoudaoById(id: string): Promise<ITranslateYoudao | null> {
-        return await TranslateYoudao.findById(id)
+    static async getBaiduBytId(id: string): Promise<ITranslateBaidu | null> {
+        return await TranslateBaidu.findOne({"tId": id})
     }
-    static async getBaiduById(id: string): Promise<ITranslateBaidu | null> {
-        return await TranslateBaidu.findById(id)
+    static async getAllTranlsateHistory() {
+        const result =  await TranslateIndex.find()
+        return result
     }
 }

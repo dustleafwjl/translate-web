@@ -8,6 +8,9 @@ const initState = {
     },
     translateData: {
         singleDataArr: []
+    },
+    translateHistory: {
+        translateHistoryArr: []
     }
 }
 

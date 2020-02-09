@@ -10,16 +10,35 @@ export const test: Middleware = async (ctx, next) => {
     await TranslateDao.insertTranslateIndex({text: "asdsfd"})
 }
 
+
+export const getTranslateById: Middleware = async (ctx, next) => {
+    const { id } = ctx.query
+    const googoe = await TranslateDao.getGoogleBytId(id)
+    try {
+        const result = await Promise.all([TranslateDao.getGoogleBytId(id), TranslateDao.getYoudaoBytId(id), TranslateDao.getBaiduBytId(id)])
+        ctx.response.body = result
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getTranslateHistory: Middleware = async (ctx, next) => {
+    const result = await TranslateDao.getAllTranlsateHistory()
+    ctx.response.body = result
+}
+
+// 翻译
 export const translateAll: Middleware = async(ctx, next) => {
     const { text, to } = ctx.query
-    const translateParams = { text, from: "auto", to }
+    const from = await google.detect(text)
+    const translateParams = { text, from, to }
     let result: TranslateResult[]
     try {
         let textAndAudioArr: ITranslateAndaudioResult[] = []
         result = await Promise.all([
             google.translate(translateParams),
             youdao.translate(translateParams),
-            youdao.translate(translateParams)
+            baidu.translate(translateParams)
         ])
         for(let i = 0; i < result.length; i ++) {
             let ele = result[i]
@@ -70,7 +89,7 @@ export const translateAll: Middleware = async(ctx, next) => {
             }),
         ])
     } catch (error) {
-        console.log(error)
+        console.log("result error", error)
         ctx.response.body = {code: "404"}
     }
 }

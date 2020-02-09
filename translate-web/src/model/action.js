@@ -1,5 +1,7 @@
 export const TOTYPEFILE = "TOTYPEFILE"
 export const TOTYPESINGLE = "TOTYPESINGLE"
+export const SETTRANSLATEHISTORY = "SETTRANSLATEHISTORY"
+
 
 // 设置单句翻译的数据
 export const SETSINGLEDATA = "SETSINGLEDATA"
@@ -14,4 +16,8 @@ export function changeToTypeSingle() {
 
 export function setSingleData(data) {
     return { type: SETSINGLEDATA , value: data}
+}
+
+export function setTranslateHistory(data) {
+    return { type: SETTRANSLATEHISTORY, value: data}
 }

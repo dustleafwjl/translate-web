@@ -1,6 +1,6 @@
 import axios from "axios"
 
-axios.defaults.baseURL = "http://localhost:8082"
+axios.defaults.baseURL = "http://localhost:8081"
 
 /**
  * 
@@ -38,6 +38,11 @@ export const translateByBaidu = async (text, to) => {
 // ])
 export const translateByAllWays = async (params) => await axios.get("/translateall", {params})
 
+export const getTranslateHistory = () => axios.get("/translatehistory")
+
+export const getTranslateById = (params) => axios.get("/gettranslateById", {params})
+
+
 export function formatTranslateData(data) {
     if(data.code && data.code === '404') return null
     return {
@@ -50,3 +55,4 @@ export function formatTranslateData(data) {
         type: data.type
     }
 }
+

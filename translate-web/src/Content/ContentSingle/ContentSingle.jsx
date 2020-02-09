@@ -2,19 +2,14 @@ import React, { Component, useState } from 'react'
 import {connect } from 'react-redux'
 import { Row, Col, Collapse, List, Tag, Empty, Icon } from 'antd'
 
-import { setSingleData } from '../../model/action'
+import { setSingleData, setTranslateHistory } from '../../model/action'
+import { getTranslateHistory, getTranslateById} from '../../API'
+
+import styles from './ContentSingle.module.scss'
 
 const { Panel } = Collapse
 
-// 测试数据
-const data = [
-    'Racing car sprays burning fuel into crowd.',
-    'Japanese princess to wed commoner.',
-    'Australian walks 100km after outback crash.',
-    'Man charged over missing wedding girl.',
-    'Los Angeles battles huge wildfires.',
-];
-
+// 图片logo
 const translateLogo = {
     bing: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFNSURBVFhH7ZYvDsIwFIc5ALfgBByBM3AAbsAVMPMIBBJFgkKQYOdJUCgwuDkUKFTJB2tYmq577TogYb/kl2309fWjf97W6SaJ+qZbgFKA3nSqJmmqRuv1894WE8NOgNPlohDX2W6nhquVNbaORQBaPMeeDS+A7HptAVqA3wDA/fnc2s/XQQAMnp7PanM8qvF2WwsmeAmWh0P+66s+8AyMbpc6GICqeLvf85a36KOrpgQmGIAry+AS/XmfmLmLDgbAJK8SOYp9TNcC4B4IM66oRgGKsYDQbuojAGy4sv3QKADnnx1v++daUQF0Mly19ggwAG35tb1ngIGrjh8iRvIF5QUgEX18KmI0AGKZbunA2k6AfZbl6ctFOeY9MFgsrHmqXAqASUpyW81H0nV22QmgbZ5zppvN6DvdNosAMIOxuVjnWB8jWAzQlP8dIFEPVxH9th4qW08AAAAASUVORK5CYII=",
     google: "data:image/png;base64,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",
@@ -64,7 +59,28 @@ const TranslatePanlMain = props => {
     </div>
 }
 
+const HistoryItem = props => {
+    const { text, id, setData } = props
+    const itemClick = async () => {
+        // 历史记录列表元素点击事件
+        const result = await getTranslateById({id})
+        setData(result.data)
+    }
+    return (<div onClick={itemClick} >
+        {text}
+    </div>)
+}
+
 class ContentSingle extends Component {
+    async setTranslateHistory() {
+        const result = await getTranslateHistory()
+        console.log(result)
+        this.props.setTranslateHistoryToStore(result.data)
+        console.log(result)
+    }
+    componentWillMount() {
+        this.setTranslateHistory()
+    }
     render() {
         return (
             <div>
@@ -89,10 +105,10 @@ class ContentSingle extends Component {
                         <List
                         size="large"
                         header={<div>翻译历史记录</div>}
-                        footer={<div>Footer</div>}
                         bordered
-                        dataSource={data}
-                        renderItem={item => <List.Item>{item}</List.Item>}
+                        pagination={true}
+                        dataSource={this.props.translateHistoryArr}
+                        renderItem={item => <List.Item className={ styles['history-item']} ><HistoryItem text={item.text} id={item._id} setData={this.props.setSingleDataToStore}/></List.Item>}
                         />
                     </Col>
                 </Row>
@@ -108,10 +124,12 @@ class ContentSingle extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        singleDataArr: state.translateData.singleDataArr
+        singleDataArr: state.translateData.singleDataArr,
+        translateHistoryArr: state.translateHistory.translateHistoryArr
     }
 }
 const mapDispatchToProps = (dispatch) => ({
-    setSingleDataToStore: (data) => dispatch(setSingleData(data))
+    setSingleDataToStore: (data) => dispatch(setSingleData(data)),
+    setTranslateHistoryToStore: data => dispatch(setTranslateHistory(data))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(ContentSingle)
